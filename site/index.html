@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LSA-Plancheck – Automatisierte Prüfung von Signalzeitenplänen</title>
+<meta name="description" content="Python-Tool, das Signalprogramme von Lichtsignalanlagen automatisch auf Konfliktfreiheit, Zwischenzeiten und Mindestfreigabezeiten prüft und einen Prüfbericht erzeugt.">
+<style>
+:root{--ink:#1d2433;--quiet:#5b6475;--line:#dde1e7;--bg:#f5f6f8;--card:#fff;--accent:#1f6feb;--ok:#1f7a35;--bad:#b3141f}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.55}
+main{max-width:1040px;margin:0 auto;padding:40px 20px 56px}
+.eyebrow{color:var(--accent);font-weight:600;font-size:14px;letter-spacing:.02em}
+h1{font-size:34px;line-height:1.2;margin:6px 0 12px}
+h2{font-size:21px;margin:44px 0 14px}
+.lead{font-size:18px;color:var(--quiet);max-width:760px;margin:0}
+.en{font-size:14px;color:var(--quiet);margin-top:8px}
+.buttons{display:flex;gap:10px;flex-wrap:wrap;margin:24px 0 8px}
+.btn{display:inline-block;padding:10px 16px;border-radius:8px;font-weight:600;font-size:15px;text-decoration:none;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn:hover{filter:brightness(.96)}
+figure{margin:28px 0 0;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+figure img{width:100%;display:block}
+figcaption{color:var(--quiet);font-size:14px;margin-top:8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px}
+.card b{display:block;font-size:16px;margin-bottom:4px}
+.card span{color:var(--quiet);font-size:14px}
+table{border-collapse:collapse;width:100%;background:var(--card);border:1px solid var(--line);font-size:15px}
+th,td{padding:10px 12px;border-bottom:1px solid #eceff3;text-align:left}
+th{background:#eef1f5}
+td.num{text-align:right;font-variant-numeric:tabular-nums}
+.ok{color:var(--ok);font-weight:600}.bad{color:var(--bad);font-weight:600}
+ol{padding-left:20px}ol li{margin-bottom:8px}
+code,.formula{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.formula{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 16px;display:inline-block;font-size:16px}
+footer{margin-top:48px;padding-top:20px;border-top:1px solid var(--line);color:var(--quiet);font-size:14px}
+a{color:var(--accent)}
+@media (max-width:600px){h1{font-size:27px}.lead{font-size:16px}}
+</style>
+</head>
+<body>
+<main>
+
+<div class="eyebrow">Verkehrstechnik · Lichtsignalanlagen · Python</div>
+<h1>LSA-Plancheck – automatisierte Prüfung von Signalzeitenplänen</h1>
+<p class="lead">Bevor ein Signalprogramm ins Steuergerät geht, muss es sicher sein. LSA-Plancheck prüft es
+automatisch auf <b>Konfliktfreiheit, Zwischenzeiten, Mindestfreigabezeiten</b> sowie Gelb- und
+Rot-Gelb-Zeiten und erzeugt den Prüfbericht als Teil der Dokumentation.</p>
+<p class="en">English: A Python tool that checks traffic signal timing plans for conflicts, intergreen times and
+minimum green times before they are loaded into the controller, and writes the test report automatically.</p>
+
+<div class="buttons">
+  <a class="btn primary" href="pruefbericht_P2.html">Prüfbericht ansehen: Entwurf mit Fehlern</a>
+  <a class="btn" href="pruefbericht_P1.html">Prüfbericht: korrektes Programm</a>
+  <a class="btn" href="https://github.com/SohaibAhmedbhai/lsa-plancheck">Code auf GitHub</a>
+</div>
+
+<figure>
+  <img src="signalzeitenplan_P2.png" alt="Signalzeitenplan eines fehlerhaften Entwurfs mit rot markierten Konflikten, zu kurzen Zwischenzeiten und zu kurzer Fußgängerfreigabe">
+  <figcaption>Automatisch erzeugter Signalzeitenplan eines fehlerhaften Entwurfs: gleichzeitige Freigaben (schraffiert),
+  zu kurze Zwischenzeiten (Klammern mit Ist/Soll) und eine zu kurze Fußgängerfreigabe sind rot markiert.</figcaption>
+</figure>
+
+<h2>Ergebnis am Beispielknoten</h2>
+<p>Fiktiver vierarmiger Knotenpunkt mit 4 Kfz- und 4 Fußgänger-Signalgruppen, 24 Konfliktbeziehungen und
+einer Umlaufzeit von 70 s.</p>
+<table>
+  <thead><tr><th>Programm</th><th>Beschreibung</th><th class="num">Fehler</th><th class="num">Warnungen</th><th>Ergebnis</th></tr></thead>
+  <tbody>
+    <tr><td><a href="pruefbericht_P1.html">P1</a></td><td>Korrektes 2-Phasen-Programm</td><td class="num">0</td><td class="num">0</td><td class="ok">Bestanden</td></tr>
+    <tr><td><a href="pruefbericht_P2.html">P2</a></td><td>Entwurf mit eingebauten Fehlern</td><td class="num">7</td><td class="num">1</td><td class="bad">Nicht bestanden – alle Fehler erkannt</td></tr>
+  </tbody>
+</table>
+
+<h2>Was geprüft wird</h2>
+<div class="grid">
+  <div class="card"><b>Konfliktfreiheit</b><span>Feindliche Signalgruppen dürfen nie gleichzeitig Grün haben.</span></div>
+  <div class="card"><b>Zwischenzeiten</b><span>Berechnet aus Räum- und Einfahrwegen, geprüft für jeden Phasenübergang.</span></div>
+  <div class="card"><b>Mindestfreigabezeiten</b><span>Keine Freigabe kürzer als vorgegeben (Standard 5 s).</span></div>
+  <div class="card"><b>Gelb und Rot-Gelb</b><span>Gelbzeit passend zur zulässigen Geschwindigkeit (3 / 4 / 5 s).</span></div>
+</div>
+<p>Insgesamt 14 Prüfregeln, auch für Freigaben über das Umlaufende hinaus. Jeder Verstoß wird mit Ist-Wert,
+Soll-Wert und Fehlbetrag gemeldet.</p>
+
+<h2>So funktioniert es</h2>
+<ol>
+  <li><b>Knotenpunkt beschreiben</b> – Signalgruppen, Konfliktgeometrie und Signalprogramme als
+      Excel-kompatible CSV-Dateien (<a href="https://github.com/SohaibAhmedbhai/lsa-plancheck/tree/main/beispiele/knoten_hauptstrasse_ringstrasse">Beispieldateien</a>).</li>
+  <li><b>Zwischenzeiten berechnen</b> – nach RiLSA 2015:<br>
+      <span class="formula">t<sub>z</sub> = t<sub>ü</sub> + (s<sub>r</sub> + l<sub>Fz</sub>) / v<sub>r</sub> − s<sub>e</sub> / v<sub>e</sub></span>
+      &nbsp;→ <a href="zwischenzeitenmatrix.csv">Zwischenzeitenmatrix</a></li>
+  <li><b>Programme prüfen</b> – 14 Regeln, Fehler mit Ist/Soll-Vergleich.</li>
+  <li><b>Bericht erzeugen</b> – HTML, Markdown, JSON und Signalzeitenplan mit markierten Verstößen.</li>
+</ol>
+<p>Diese Seite wird bei jeder Änderung am Code automatisch neu erzeugt: GitHub Actions führt das Tool aus
+und veröffentlicht die aktuellen Berichte. 17 automatisierte Tests sichern die Berechnung ab.</p>
+
+<footer>
+  Entwickelt von <b>Sohaib Ahmed</b> · M.Sc.-Student Bauingenieurwesen (Verkehrstechnik), TU München ·
+  <a href="https://github.com/SohaibAhmedbhai/lsa-plancheck">Quellcode und Dokumentation</a><br>
+  Lern- und Portfolioprojekt. Die Kennwerte folgen der RiLSA 2015; der Bericht ersetzt nicht die Prüfung durch eine Fachplanerin bzw. einen Fachplaner.
+</footer>
+
+</main>
+</body>
+</html>
