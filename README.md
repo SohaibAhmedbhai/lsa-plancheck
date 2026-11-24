@@ -6,6 +6,9 @@
 **▶ Live-Demo ohne Installation: [sohaibahmedbhai.github.io/lsa-plancheck/](https://sohaibahmedbhai.github.io/lsa-plancheck/)** – Beispielberichte und
 Signalzeitenpläne direkt im Browser.
 
+**▶ Eigenen Knotenpunkt prüfen: [interaktives Prüfwerkzeug](https://sohaibahmedbhai.github.io/lsa-plancheck/pruefen.html)** –
+CSV-Dateien hochladen oder Grünzeiten im Browser ändern; die Prüfung läuft lokal im Browser (Python über Pyodide).
+
 Python-Werkzeug, das Signalprogramme von Lichtsignalanlagen (LSA) automatisch prüft und einen
 Prüfbericht als Teil der Dokumentation erzeugt. Geprüft werden **Konfliktfreiheit,
 Zwischenzeiten, Mindestfreigabezeiten sowie Gelb- und Rot-Gelb-Zeiten**. Fehler werden mit
@@ -31,7 +34,8 @@ Standardprüfungen und erzeugt eine nachvollziehbare Prüfdokumentation mit Rech
 - **Kommandozeile mit Rückgabewerten** (0 = fehlerfrei, 1 = Fehler, 2 = Eingabefehler),
   dadurch einsetzbar in automatisierten Abläufen
 - Eingabe als **CSV-Dateien (Semikolon, Excel-kompatibel)**, deutsches Dezimalkomma erlaubt
-- **17 automatisierte Tests** (pytest), u. a. Handrechnungen der Zwischenzeiten
+- **Interaktive Web-Prüfung** im Browser (Pyodide): eigene CSV-Dateien hochladen, Ergebnis sofort
+- **19 automatisierte Tests** (pytest), u. a. Handrechnungen der Zwischenzeiten
 
 ## Prüfregeln
 
@@ -169,9 +173,11 @@ lsa_pruefung/
 ├── diagramm.py          Signalzeitenplan (matplotlib)
 ├── bericht.py           Prüfbericht HTML / Markdown / JSON
 ├── cli.py               Kommandozeile
+├── web.py               Schnittstelle für die interaktive Web-Prüfung
 └── rilsa_parameter.json Kennwerte je Verkehrsart
 tests/                   pytest
 site/index.html          Startseite der Live-Demo (GitHub Pages)
+site/pruefen.html        Interaktives Prüfwerkzeug (läuft im Browser)
 ```
 
 ## Grenzen und Ausblick
