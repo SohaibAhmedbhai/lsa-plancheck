@@ -1,0 +1,30 @@
+{
+  "_hinweis": "Kennwerte nach RiLSA 2015, abgeglichen mit veroeffentlichten Sekundaerquellen (siehe README, Abschnitt 'Quellen der Kennwerte'). Vor dem Einsatz an einer realen Anlage mit dem Originaltext der RiLSA und den Vorgaben des Auftraggebers pruefen. Ein Projekt kann diese Werte mit einer eigenen parameter.json ueberschreiben.",
+  "_bewegungen": "geradeaus | abbiegend (Kurvenradius >= 10 m) | abbiegend_eng (Kurvenradius < 10 m)",
+  "verkehrsarten": {
+    "Kfz": {
+      "ueberfahrzeit_s": {"geradeaus": 3.0, "abbiegend": 2.0, "abbiegend_eng": 2.0},
+      "fahrzeuglaenge_m": 6.0,
+      "raeumgeschwindigkeit_ms": {"geradeaus": 10.0, "abbiegend": 7.0, "abbiegend_eng": 5.0},
+      "einfahrgeschwindigkeit_ms": 11.1,
+      "mindestfreigabezeit_s": 5
+    },
+    "Rad": {
+      "ueberfahrzeit_s": {"geradeaus": 1.0, "abbiegend": 1.0, "abbiegend_eng": 1.0},
+      "fahrzeuglaenge_m": 0.0,
+      "raeumgeschwindigkeit_ms": {"geradeaus": 4.0, "abbiegend": 4.0, "abbiegend_eng": 4.0},
+      "einfahrgeschwindigkeit_ms": 5.0,
+      "mindestfreigabezeit_s": 5
+    },
+    "Fg": {
+      "ueberfahrzeit_s": {"geradeaus": 0.0, "abbiegend": 0.0, "abbiegend_eng": 0.0},
+      "fahrzeuglaenge_m": 0.0,
+      "raeumgeschwindigkeit_ms": {"geradeaus": 1.2, "abbiegend": 1.2, "abbiegend_eng": 1.2},
+      "einfahrgeschwindigkeit_ms": 1.5,
+      "mindestfreigabezeit_s": 5
+    }
+  },
+  "gelbzeit_kfz_nach_vzul_kmh": {"50": 3, "60": 4, "70": 5},
+  "rotgelbzeit_kfz_s": 1,
+  "umlaufzeit_bereich_s": [30, 120]
+}
