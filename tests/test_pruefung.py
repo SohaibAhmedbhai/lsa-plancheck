@@ -191,3 +191,22 @@ def test_cli_rueckgabewerte_und_berichte(tmp_path: Path):
         assert (out / name).stat().st_size > 0
     data = json.loads((out / "pruefergebnis_P2.json").read_text(encoding="utf-8"))
     assert data["zusammenfassung"]["fehler"] == 7
+
+
+# --------------------------------------------------------------------------- #
+# Interaktive Web-Prüfung (gleiche Funktion, die die Webseite im Browser aufruft)
+# --------------------------------------------------------------------------- #
+
+def test_web_pruefung_mit_beispieldaten():
+    from lsa_pruefung.web import pruefe_texte
+    texte = [(BEISPIEL / n).read_text(encoding="utf-8") for n in
+             ("signalgruppen.csv", "konfliktgeometrie.csv", "signalprogramm_P2_entwurf.csv")]
+    res = pruefe_texte(*texte, 70)
+    assert res["fehler"] == 7 and res["warnungen"] == 1 and not res["bestanden"]
+    assert res["diagramm_png_base64"] and "<html" in res["bericht_html"]
+
+
+def test_web_pruefung_meldet_eingabefehler():
+    from lsa_pruefung.web import pruefe_texte
+    res = pruefe_texte("id;typ\nK1;Kfz\n", "", "", 70)
+    assert "Spalte" in res["fehler_eingabe"]
