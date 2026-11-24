@@ -1,0 +1,18 @@
+{
+  "name": "Knotenpunkt Hauptstraße / Ringstraße (fiktives Beispiel)",
+  "ort": "Musterstadt",
+  "programme": [
+    {
+      "id": "P1",
+      "beschreibung": "Festzeitprogramm Morgenspitze, 2 Phasen",
+      "umlaufzeit_s": 70,
+      "datei": "signalprogramm_P1.csv"
+    },
+    {
+      "id": "P2",
+      "beschreibung": "Entwurf mit eingebauten Fehlern (Demonstration der Prüfung)",
+      "umlaufzeit_s": 70,
+      "datei": "signalprogramm_P2_entwurf.csv"
+    }
+  ]
+}

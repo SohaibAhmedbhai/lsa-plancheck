@@ -1,0 +1,28 @@
+raeumend;einfahrend;raeumweg_m;einfahrweg_m;bewegung;zwischenzeit_vorgabe_s
+# Kfz räumt – Kfz fährt ein
+K1;K3;14;9;geradeaus;
+K1;K4;22;4;geradeaus;
+K2;K3;22;4;geradeaus;
+K2;K4;14;9;geradeaus;
+K3;K1;8;12;geradeaus;
+K3;K2;20;3;geradeaus;
+K4;K1;20;3;geradeaus;
+K4;K2;8;12;geradeaus;
+# Kfz räumt – Fußgänger fahren ein (Einfahrweg 0 m: keine Einfahrzeit, sichere Annahme)
+K1;F1;4;0;geradeaus;
+K1;F2;30;0;geradeaus;
+K2;F2;4;0;geradeaus;
+K2;F1;30;0;geradeaus;
+K3;F3;4;0;geradeaus;
+K3;F4;24;0;geradeaus;
+K4;F4;4;0;geradeaus;
+K4;F3;24;0;geradeaus;
+# Fußgänger räumen – Kfz fährt ein
+F1;K1;14;2;geradeaus;
+F1;K2;14;28;geradeaus;
+F2;K2;14;2;geradeaus;
+F2;K1;14;28;geradeaus;
+F3;K3;9;2;geradeaus;
+F3;K4;9;20;geradeaus;
+F4;K4;9;2;geradeaus;
+F4;K3;9;20;geradeaus;
