@@ -52,7 +52,8 @@ Rot-Gelb-Zeiten und erzeugt den Prüfbericht als Teil der Dokumentation.</p>
 minimum green times before they are loaded into the controller, and writes the test report automatically.</p>
 
 <div class="buttons">
-  <a class="btn primary" href="pruefbericht_P2.html">Prüfbericht ansehen: Entwurf mit Fehlern</a>
+  <a class="btn primary" href="pruefen.html">▶ Eigenen Knotenpunkt prüfen (interaktiv)</a>
+  <a class="btn" href="pruefbericht_P2.html">Prüfbericht: Entwurf mit Fehlern</a>
   <a class="btn" href="pruefbericht_P1.html">Prüfbericht: korrektes Programm</a>
   <a class="btn" href="https://github.com/SohaibAhmedbhai/lsa-plancheck">Code auf GitHub</a>
 </div>
@@ -62,6 +63,11 @@ minimum green times before they are loaded into the controller, and writes the t
   <figcaption>Automatisch erzeugter Signalzeitenplan eines fehlerhaften Entwurfs: gleichzeitige Freigaben (schraffiert),
   zu kurze Zwischenzeiten (Klammern mit Ist/Soll) und eine zu kurze Fußgängerfreigabe sind rot markiert.</figcaption>
 </figure>
+
+<h2>Selbst ausprobieren</h2>
+<p>Im <a href="pruefen.html"><b>interaktiven Prüfwerkzeug</b></a> lassen sich eigene Knotenpunkte prüfen: CSV-Dateien
+hochladen oder Grünzeiten direkt im Browser ändern – das Ergebnis mit Signalzeitenplan und Prüfbericht erscheint
+sofort. Die Berechnung läuft vollständig im Browser (Python über Pyodide), es werden keine Daten übertragen.</p>
 
 <h2>Ergebnis am Beispielknoten</h2>
 <p>Fiktiver vierarmiger Knotenpunkt mit 4 Kfz- und 4 Fußgänger-Signalgruppen, 24 Konfliktbeziehungen und
@@ -95,7 +101,7 @@ Soll-Wert und Fehlbetrag gemeldet.</p>
   <li><b>Bericht erzeugen</b> – HTML, Markdown, JSON und Signalzeitenplan mit markierten Verstößen.</li>
 </ol>
 <p>Diese Seite wird bei jeder Änderung am Code automatisch neu erzeugt: GitHub Actions führt das Tool aus
-und veröffentlicht die aktuellen Berichte. 17 automatisierte Tests sichern die Berechnung ab.</p>
+und veröffentlicht die aktuellen Berichte. 19 automatisierte Tests sichern die Berechnung ab.</p>
 
 <footer>
   Entwickelt von <b>Sohaib Ahmed</b> · M.Sc.-Student Bauingenieurwesen (Verkehrstechnik), TU München ·

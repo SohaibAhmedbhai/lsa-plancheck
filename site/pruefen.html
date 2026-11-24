@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Eigenen Knotenpunkt prüfen – LSA-Plancheck</title>
+<meta name="description" content="Signalprogramm einer Lichtsignalanlage direkt im Browser prüfen: Konfliktfreiheit, Zwischenzeiten, Mindestfreigabezeiten. Keine Installation, keine Datenübertragung.">
+<style>
+:root{--ink:#1d2433;--quiet:#5b6475;--line:#dde1e7;--bg:#f5f6f8;--card:#fff;--accent:#1f6feb;--ok:#1f7a35;--bad:#b3141f;--warn:#9a6700}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.5}
+main{max-width:1080px;margin:0 auto;padding:28px 20px 56px}
+a{color:var(--accent)}
+.back{font-size:14px;text-decoration:none}
+h1{font-size:30px;line-height:1.2;margin:10px 0 8px}
+h2{font-size:19px;margin:0 0 12px}
+.lead{color:var(--quiet);font-size:16px;margin:0;max-width:780px}
+.privacy{display:inline-block;margin-top:12px;font-size:13px;color:var(--ok);background:#e3f4e7;border-radius:999px;padding:4px 12px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px;margin-top:22px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{display:inline-block;padding:9px 14px;border-radius:8px;font-weight:600;font-size:14px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;text-decoration:none;font-family:inherit}
+.btn:hover{filter:brightness(.96)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-size:16px;padding:11px 20px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.upload{border:2px dashed var(--line);border-radius:10px;padding:16px;text-align:center;margin:16px 0;color:var(--quiet);font-size:14px}
+.upload.drag{border-color:var(--accent);background:#eef4ff}
+.upload b{color:var(--ink)}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+label{font-weight:600;font-size:14px;display:block;margin-bottom:4px}
+.hint{font-weight:400;color:var(--quiet);font-size:12px;display:block;margin-top:2px;font-family:ui-monospace,Menlo,Consolas,monospace;word-break:break-all}
+textarea{width:100%;height:210px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;line-height:1.45;border:1px solid var(--line);border-radius:8px;padding:8px;resize:vertical;color:var(--ink);background:#fbfcfd}
+input[type=text],input[type=number]{border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:15px;font-family:inherit}
+.fields{display:flex;gap:16px;flex-wrap:wrap;margin-top:14px;align-items:flex-end}
+#status{font-size:14px;color:var(--quiet);margin-left:4px}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;vertical-align:-2px;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.errorbox{background:#fde6e8;color:var(--bad);border-radius:8px;padding:12px 14px;margin-top:14px;font-size:14px;display:none}
+#ergebnis{display:none}
+.badge{display:inline-block;padding:5px 14px;border-radius:999px;font-weight:700;font-size:15px}
+.badge.ok{background:#e3f4e7;color:var(--ok)}.badge.bad{background:#fde6e8;color:var(--bad)}
+.cards{display:flex;gap:12px;flex-wrap:wrap;margin:14px 0 6px}
+.card{border:1px solid var(--line);border-radius:8px;padding:10px 16px;min-width:140px}
+.card b{display:block;font-size:22px}.card span{color:var(--quiet);font-size:13px}
+.ok{color:var(--ok)}.bad{color:var(--bad)}.warn{color:var(--warn)}
+#diagramm{width:100%;border:1px solid var(--line);border-radius:8px;margin-top:10px;background:#fff}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px;margin-top:10px}
+th,td{border-bottom:1px solid #eceff3;padding:7px 8px;text-align:left;vertical-align:top}
+th{background:#eef1f5}
+td.lvl{font-weight:700;white-space:nowrap}
+details{margin-top:16px;font-size:14px}
+details summary{cursor:pointer;font-weight:600}
+details table{font-size:13px}
+code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;background:#eef1f5;padding:1px 4px;border-radius:4px}
+footer{margin-top:36px;color:var(--quiet);font-size:13px}
+@media (max-width:600px){h1{font-size:25px}.panel{padding:14px}textarea{height:170px}}
+</style>
+</head>
+<body>
+<main>
+<a class="back" href="./">← Zur Projektübersicht</a>
+<h1>Eigenen Knotenpunkt prüfen</h1>
+<p class="lead">Laden Sie die Daten Ihres Knotenpunkts hoch oder bearbeiten Sie das Beispiel direkt. Das Tool berechnet die
+Zwischenzeiten nach RiLSA 2015 und prüft das Signalprogramm auf Konfliktfreiheit, Zwischenzeiten,
+Mindestfreigabezeiten sowie Gelb- und Rot-Gelb-Zeiten.</p>
+<p class="lead" style="font-size:14px;margin-top:6px">English: Upload your own intersection or edit the example – the check runs instantly in your browser.</p>
+<span class="privacy">✓ Läuft vollständig in Ihrem Browser – es werden keine Daten übertragen</span>
+
+<section class="panel">
+  <h2>1. Daten des Knotenpunkts</h2>
+  <div class="row">
+    <button class="btn" id="bsp-fehler" type="button">Beispiel: Entwurf mit Fehlern</button>
+    <button class="btn" id="bsp-ok" type="button">Beispiel: korrektes Programm</button>
+    <a class="btn" href="https://github.com/SohaibAhmedbhai/lsa-plancheck/tree/main/beispiele/knoten_hauptstrasse_ringstrasse" target="_blank" rel="noopener">Vorlagen (CSV) ansehen</a>
+  </div>
+
+  <div class="upload" id="dropzone">
+    <b>Eigene CSV-Dateien hierher ziehen</b> oder
+    <label for="dateien" class="btn" style="display:inline-block;margin:6px 4px 0">Dateien auswählen</label>
+    <input id="dateien" type="file" accept=".csv,.txt,.json" multiple hidden>
+    <div style="margin-top:6px">Erkannt werden <code>signalgruppen.csv</code>, <code>konfliktgeometrie.csv</code>,
+    <code>signalprogramm….csv</code> und optional <code>knoten.json</code> (Semikolon als Trennzeichen, wie aus Excel).</div>
+  </div>
+
+  <div class="grid3">
+    <div>
+      <label for="gruppen">Signalgruppen
+        <span class="hint">id;typ;bezeichnung;v_zul_kmh;gelb_s;rotgelb_s;mindestfreigabe_s</span></label>
+      <textarea id="gruppen" spellcheck="false"></textarea>
+    </div>
+    <div>
+      <label for="konflikte">Konfliktgeometrie (feindliche Paare)
+        <span class="hint">raeumend;einfahrend;raeumweg_m;einfahrweg_m;bewegung;zwischenzeit_vorgabe_s</span></label>
+      <textarea id="konflikte" spellcheck="false"></textarea>
+    </div>
+    <div>
+      <label for="programm">Signalprogramm (Grünzeiten)
+        <span class="hint">signalgruppe;gruen_beginn_s;gruen_ende_s</span></label>
+      <textarea id="programm" spellcheck="false"></textarea>
+    </div>
+  </div>
+
+  <div class="fields">
+    <div><label for="name">Name des Knotenpunkts</label><input id="name" type="text" size="34"></div>
+    <div><label for="umlauf">Umlaufzeit t<sub>U</sub> [s]</label><input id="umlauf" type="number" min="1" step="1" style="width:110px"></div>
+    <div class="row">
+      <button class="btn primary" id="pruefen" type="button" disabled>Signalprogramm prüfen</button>
+      <span id="status"><span class="spinner"></span>Prüfwerkzeug wird geladen …</span>
+    </div>
+  </div>
+  <div class="errorbox" id="fehlerbox"></div>
+
+  <details>
+    <summary>Hinweise zum Dateiformat</summary>
+    <div class="scroll"><table>
+      <tr><th>Feld</th><th>Bedeutung</th></tr>
+      <tr><td><code>typ</code></td><td><code>Kfz</code>, <code>Rad</code> oder <code>Fg</code> (Fußverkehr)</td></tr>
+      <tr><td><code>v_zul_kmh</code></td><td>zulässige Geschwindigkeit (für die Gelbzeit der Kfz-Signale, 3 / 4 / 5 s bei 50 / 60 / 70 km/h)</td></tr>
+      <tr><td><code>mindestfreigabe_s</code></td><td>leer = Standard 5 s</td></tr>
+      <tr><td><code>raeumweg_m</code> / <code>einfahrweg_m</code></td><td>Weg von der Haltlinie bis zum Ende bzw. Beginn der Konfliktfläche</td></tr>
+      <tr><td><code>bewegung</code></td><td><code>geradeaus</code>, <code>abbiegend</code> (Radius ≥ 10 m) oder <code>abbiegend_eng</code> (Radius &lt; 10 m)</td></tr>
+      <tr><td><code>zwischenzeit_vorgabe_s</code></td><td>optional: feste Zwischenzeit statt Berechnung</td></tr>
+      <tr><td><code>gruen_beginn_s</code> / <code>gruen_ende_s</code></td><td>Sekunden im Umlauf; eine Freigabe darf über das Umlaufende laufen (z. B. 65 → 31)</td></tr>
+    </table></div>
+    <p>Jedes feindliche Paar wird in beiden Richtungen angegeben (räumend → einfahrend). Zeilen mit <code>#</code> sind Kommentare.</p>
+  </details>
+</section>
+
+<section class="panel" id="ergebnis">
+  <h2>2. Ergebnis der Prüfung</h2>
+  <span class="badge" id="badge"></span>
+  <div class="cards">
+    <div class="card"><b id="k-fehler"></b><span>Fehler</span></div>
+    <div class="card"><b id="k-warn"></b><span>Warnungen</span></div>
+    <div class="card"><b id="k-zz"></b><span>Zwischenzeiten eingehalten</span></div>
+    <div class="card"><b id="k-gruppen"></b><span>Signalgruppen</span></div>
+  </div>
+  <img id="diagramm" alt="Signalzeitenplan mit markierten Verstößen">
+  <div class="scroll"><table>
+    <thead><tr><th>Stufe</th><th>Regel</th><th>Prüfung</th><th>Meldung</th></tr></thead>
+    <tbody id="befunde"></tbody>
+  </table></div>
+  <div class="row" style="margin-top:16px">
+    <a class="btn" id="download" download="pruefbericht.html">Vollständigen Prüfbericht herunterladen (HTML)</a>
+    <button class="btn" id="oeffnen" type="button">Prüfbericht in neuem Tab öffnen</button>
+  </div>
+</section>
+
+<footer>LSA-Plancheck · Sohaib Ahmed · <a href="https://github.com/SohaibAhmedbhai/lsa-plancheck">Quellcode auf GitHub</a> ·
+Lern- und Portfolioprojekt; ersetzt nicht die Prüfung durch eine Fachplanerin bzw. einen Fachplaner.</footer>
+</main>
+
+<script type="module">
+const PYODIDE = 'https://cdn.jsdelivr.net/pyodide/v0.27.2/full/pyodide.mjs';
+const RAW = 'https://raw.githubusercontent.com/SohaibAhmedbhai/lsa-plancheck/main/';
+const MODULE = ['__init__.py', 'bericht.py', 'diagramm.py', 'modell.py', 'pruefungen.py',
+                'rilsa_parameter.json', 'web.py', 'zwischenzeiten.py', 'zyklus.py'];
+const BSP = 'beispiele/knoten_hauptstrasse_ringstrasse/';
+const $ = id => document.getElementById(id);
+let py = null, pruefe = null, berichtUrl = null;
+
+// Dateien zuerst von dieser Seite laden, sonst direkt aus dem GitHub-Repository
+async function holen(pfad) {
+  for (const url of [pfad, RAW + pfad]) {
+    try { const r = await fetch(url, {cache: 'no-cache'}); if (r.ok) return await r.text(); } catch (e) { /* nächste Quelle */ }
+  }
+  throw new Error('Datei nicht gefunden: ' + pfad);
+}
+
+function status(text, laden = true) {
+  $('status').innerHTML = (laden ? '<span class="spinner"></span>' : '') + text;
+}
+
+function fehlerAnzeigen(text) {
+  $('fehlerbox').textContent = text;
+  $('fehlerbox').style.display = text ? 'block' : 'none';
+}
+
+async function beispielLaden(programmDatei) {
+  $('gruppen').value = await holen(BSP + 'signalgruppen.csv');
+  $('konflikte').value = await holen(BSP + 'konfliktgeometrie.csv');
+  $('programm').value = await holen(BSP + programmDatei);
+  $('name').value = 'Hauptstraße / Ringstraße (Beispiel)';
+  $('umlauf').value = 70;
+}
+
+async function starten() {
+  await beispielLaden('signalprogramm_P2_entwurf.csv');
+  status('Python wird im Browser gestartet … (beim ersten Aufruf ca. 15–20 s)');
+  const { loadPyodide } = await import(PYODIDE);
+  py = await loadPyodide();
+  status('Diagramm-Bibliothek wird geladen …');
+  await py.loadPackage('matplotlib');
+  status('Prüfwerkzeug wird geladen …');
+  py.FS.mkdirTree('/home/pyodide/lsa_pruefung');
+  for (const f of MODULE) py.FS.writeFile('/home/pyodide/lsa_pruefung/' + f, await holen('lsa_pruefung/' + f));
+  py.runPython("import sys; sys.path.insert(0, '/home/pyodide')\nfrom lsa_pruefung.web import pruefe_json");
+  pruefe = py.globals.get('pruefe_json');
+  $('pruefen').disabled = false;
+  await pruefen();
+}
+
+async function pruefen() {
+  if (!pruefe) return;
+  fehlerAnzeigen('');
+  $('pruefen').disabled = true;
+  status('Prüfung läuft …');
+  await new Promise(r => setTimeout(r, 30));  // Statusanzeige zeichnen lassen
+  try {
+    const res = JSON.parse(pruefe($('gruppen').value, $('konflikte').value, $('programm').value,
+                                  $('umlauf').value, $('name').value));
+    if (res.fehler_eingabe) {
+      fehlerAnzeigen('Die Daten konnten nicht gelesen werden: ' + res.fehler_eingabe);
+      status('Bitte Eingaben korrigieren.', false);
+      return;
+    }
+    zeigen(res);
+    status('Fertig – Daten ändern und erneut prüfen.', false);
+  } catch (e) {
+    fehlerAnzeigen('Unerwarteter Fehler: ' + e.message);
+    status('Fehler bei der Prüfung.', false);
+  } finally {
+    $('pruefen').disabled = false;
+  }
+}
+
+function zeigen(res) {
+  $('ergebnis').style.display = 'block';
+  $('badge').textContent = res.bestanden ? 'BESTANDEN' : 'NICHT BESTANDEN';
+  $('badge').className = 'badge ' + (res.bestanden ? 'ok' : 'bad');
+  $('k-fehler').textContent = res.fehler;
+  $('k-fehler').className = res.fehler ? 'bad' : 'ok';
+  $('k-warn').textContent = res.warnungen;
+  $('k-warn').className = res.warnungen ? 'warn' : 'ok';
+  $('k-zz').textContent = res.zwischenzeiten_ok + ' / ' + res.zwischenzeiten_geprueft;
+  $('k-gruppen').textContent = res.signalgruppen;
+  $('diagramm').src = 'data:image/png;base64,' + res.diagramm_png_base64;
+  const tbody = $('befunde');
+  tbody.innerHTML = '';
+  if (!res.befunde.length) {
+    const tr = tbody.insertRow(); const td = tr.insertCell(); td.colSpan = 4;
+    td.textContent = 'Keine Befunde – das Signalprogramm erfüllt alle Prüfregeln.'; td.className = 'ok';
+  }
+  for (const b of res.befunde) {
+    const tr = tbody.insertRow();
+    const werte = [b.stufe, b.regel, b.pruefung, b.meldung];
+    werte.forEach((w, i) => { const td = tr.insertCell(); td.textContent = w; if (i === 0) td.className = 'lvl ' + (w === 'FEHLER' ? 'bad' : 'warn'); });
+  }
+  if (berichtUrl) URL.revokeObjectURL(berichtUrl);
+  berichtUrl = URL.createObjectURL(new Blob([res.bericht_html], {type: 'text/html'}));
+  $('download').href = berichtUrl;
+  $('ergebnis').scrollIntoView({behavior: 'smooth', block: 'start'});
+}
+
+// Hochgeladene Dateien anhand des Dateinamens zuordnen
+async function dateienUebernehmen(liste) {
+  const unbekannt = [];
+  for (const datei of liste) {
+    const n = datei.name.toLowerCase(), text = await datei.text();
+    if (n.endsWith('.json')) {
+      try {
+        const meta = JSON.parse(text);
+        if (meta.name) $('name').value = meta.name;
+        if (meta.programme && meta.programme[0]) $('umlauf').value = meta.programme[0].umlaufzeit_s;
+      } catch (e) { unbekannt.push(datei.name + ' (kein gültiges JSON)'); }
+    } else if (n.includes('gruppe')) $('gruppen').value = text;
+    else if (n.includes('konflikt') || n.includes('geometrie')) $('konflikte').value = text;
+    else if (n.includes('programm') || n.includes('signalzeit')) $('programm').value = text;
+    else unbekannt.push(datei.name);
+  }
+  fehlerAnzeigen(unbekannt.length ? 'Nicht zugeordnet (Dateiname nicht erkannt): ' + unbekannt.join(', ') : '');
+  if (pruefe && !unbekannt.length) await pruefen();
+}
+
+$('pruefen').addEventListener('click', pruefen);
+$('bsp-fehler').addEventListener('click', async () => { await beispielLaden('signalprogramm_P2_entwurf.csv'); await pruefen(); });
+$('bsp-ok').addEventListener('click', async () => { await beispielLaden('signalprogramm_P1.csv'); await pruefen(); });
+$('oeffnen').addEventListener('click', () => { if (berichtUrl) window.open(berichtUrl, '_blank'); });
+$('dateien').addEventListener('change', e => dateienUebernehmen(e.target.files));
+const zone = $('dropzone');
+zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag'); });
+zone.addEventListener('dragleave', () => zone.classList.remove('drag'));
+zone.addEventListener('drop', e => { e.preventDefault(); zone.classList.remove('drag'); dateienUebernehmen(e.dataTransfer.files); });
+
+starten().catch(e => { status('Laden fehlgeschlagen.', false); fehlerAnzeigen('Das Prüfwerkzeug konnte nicht geladen werden: ' + e.message); });
+</script>
+</body>
+</html>
