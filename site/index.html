@@ -36,7 +36,8 @@ code,.formula{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
 .formula{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 16px;display:inline-block;font-size:16px}
 footer{margin-top:48px;padding-top:20px;border-top:1px solid var(--line);color:var(--quiet);font-size:14px}
 a{color:var(--accent)}
-@media (max-width:600px){h1{font-size:27px}.lead{font-size:16px}}
+.table-wrap{overflow-x:auto}
+@media (max-width:600px){h1{font-size:27px}.lead{font-size:16px}th,td{padding:8px 6px;font-size:14px}}
 </style>
 </head>
 <body>
@@ -65,13 +66,13 @@ minimum green times before they are loaded into the controller, and writes the t
 <h2>Ergebnis am Beispielknoten</h2>
 <p>Fiktiver vierarmiger Knotenpunkt mit 4 Kfz- und 4 Fußgänger-Signalgruppen, 24 Konfliktbeziehungen und
 einer Umlaufzeit von 70 s.</p>
-<table>
+<div class="table-wrap"><table>
   <thead><tr><th>Programm</th><th>Beschreibung</th><th class="num">Fehler</th><th class="num">Warnungen</th><th>Ergebnis</th></tr></thead>
   <tbody>
     <tr><td><a href="pruefbericht_P1.html">P1</a></td><td>Korrektes 2-Phasen-Programm</td><td class="num">0</td><td class="num">0</td><td class="ok">Bestanden</td></tr>
     <tr><td><a href="pruefbericht_P2.html">P2</a></td><td>Entwurf mit eingebauten Fehlern</td><td class="num">7</td><td class="num">1</td><td class="bad">Nicht bestanden – alle Fehler erkannt</td></tr>
   </tbody>
-</table>
+</table></div>
 
 <h2>Was geprüft wird</h2>
 <div class="grid">
