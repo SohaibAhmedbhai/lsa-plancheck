@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lsa-plancheck"
+version = "1.0.0"
+description = "Automatisierte Plausibilitätsprüfung von Signalzeitenplänen für Lichtsignalanlagen"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "Sohaib Ahmed"}]
+dependencies = ["matplotlib>=3.7"]
+
+[project.optional-dependencies]
+test = ["pytest>=7.0"]
+
+[project.scripts]
+lsa-pruefung = "lsa_pruefung.cli:main"
+
+[tool.setuptools]
+packages = ["lsa_pruefung"]
+
+[tool.setuptools.package-data]
+lsa_pruefung = ["rilsa_parameter.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
