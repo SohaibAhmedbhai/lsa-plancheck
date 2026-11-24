@@ -30,7 +30,9 @@ jobs:
         run: |
           python -m lsa_pruefung pruefe beispiele/knoten_hauptstrasse_ringstrasse -o _site || true
           python -m lsa_pruefung matrix beispiele/knoten_hauptstrasse_ringstrasse -o _site
-          cp site/index.html _site/index.html
+          cp site/*.html _site/
+          cp -r lsa_pruefung _site/lsa_pruefung
+          cp -r beispiele _site/beispiele
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
